@@ -14,9 +14,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/main.js",
-    "dev" : "nodemon src/main.js"
+    "dev": "nodemon src/main.js"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mongoose": "^9.1.5",
+    "nodeman": "^1.1.2"
   }
 }

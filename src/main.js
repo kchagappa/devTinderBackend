@@ -1,24 +1,34 @@
 const express = require("express")
-
+const connectDB = require("./config/database")
+const UserModel = require("./models/user")
 const app = express()
 
-const port = 8080
-app.listen(port, () => {
-    console.log("port running on:", port)
+
+app.post("/createUser", async (req, res) => {
+    const user = UserModel({
+        firstName: "chagappa",
+        secondName: "kurubara",
+        age: "26",
+        gender: "male",
+        email: "chaga@gmail.com",
+        password: "chaga@123"
+    })
+
+    await user.save()
+
+    res.send("user added successfully!!!!!")
+
 })
 
-app.use("/user", (req, res, next) => {
-    let namew = "chagappa"
-    console.log(req.query.name)
-    if(namew === req.query.name){
-        next()
-    } else {
-        res.send("Authontication Failed").code(400)
-    }
-})
 
-app.get("/user/getUser", (req, res) => {
-    console.log("users")
-    res.send("nameee")
-    
-})
+connectDB()
+    .then(() => {
+        console.log("data base connection established!!!!")
+        app.listen(8080, async () => {
+
+            console.log("server running on 8080 portal")
+        })
+    })
+    .catch(error => {
+        console.log("Data base is not connected!!!!")
+    })
