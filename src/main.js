@@ -4,19 +4,19 @@ const UserModel = require("./models/user")
 const app = express()
 
 
+app.use(express.json())
+
 app.post("/createUser", async (req, res) => {
-    const user = UserModel({
-        firstName: "chagappa",
-        secondName: "kurubara",
-        age: "26",
-        gender: "male",
-        email: "chaga@gmail.com",
-        password: "chaga@123"
-    })
+    const user = UserModel(req?.body)
 
-    await user.save()
+    try {
+        await user.save()
+        res.send("user added successfully!!!!!")
 
-    res.send("user added successfully!!!!!")
+    } catch (error) {
+        console.log("Error while adding the user")
+        res.send(400)
+    }
 
 })
 

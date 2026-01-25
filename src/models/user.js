@@ -1,9 +1,10 @@
 const mongoose = require('mongoose')
 
 
-const UserSchema = mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     firstName: {
-        type: "string"
+        type: "string",
+        required : true
     },
     secondName: {
         type: "string"
