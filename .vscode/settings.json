@@ -1,0 +1,4 @@
+{
+    "editor.inlineSuggest.experimental.emptyResponseInformation": true,
+    "gitlens.hovers.currentLine.details": true
+}

@@ -1,84 +1,71 @@
 const express = require("express")
 const connectDB = require("./config/database")
+const bcrypt = require("bcrypt")
 const UserModel = require("./models/user")
+const ValidateSignUpUser = require("./utils/validateUser")
+const validator = require("validator");
+const cookieParser = require("cookie-parser")
+const jwt = require("jsonwebtoken")
+const { authUser } = require("./middlewares/authMiddlware.js")
 const app = express()
 
-
 app.use(express.json())
+app.use(cookieParser())
 
+//signIn
 app.post("/signup", async (req, res) => {
-    const user = UserModel(req?.body)
     try {
+        const { firstName, lastName, email, password, age, gender } = req.body
+        await ValidateSignUpUser(req)
+        const hashPassword = await bcrypt.hash(password, 10)
+        const user = new UserModel({
+            firstName,
+            lastName,
+            email,
+            password: hashPassword,
+            age,
+            gender
+        })
         await user.save()
-        res.send("user added successfully!!!!!")
-
+        res.send("user added successfully!!!!")
     } catch (error) {
         console.log("Error while adding the user")
-        res.status(400).send("user not found")
+        res.status(400).send(error.message)
+    }
+})
+
+//logIn
+app.post("/logIn", async (req, res) => {
+    try {
+        const { email, password } = req.body
+        if (!validator.isEmail(email)) {
+            throw new Error("Invalid email!!!")
+        }
+        const userData = await UserModel.findOne({ email })
+        const isPasswordMatch = await userData.validatePassword(password)
+        if (!isPasswordMatch) {
+            throw new Error("Invalid login credentials!!!")
+        } else {
+            const token = await userData.getJWT()
+            res.cookie("token", token, { expires: new Date(Date.now() + 8 * 3600) })
+            res.send("LogIn successfull!!!")
+        }
+
+    } catch (error) {
+        res.status(400).send(error.message)
     }
 })
 
 //GET single user
-app.get("/getUser", async (req, res) => {
-
+app.get("/profile", authUser, async (req, res) => {
     try {
-        const userDetails = req.query
-        const response = await UserModel.findOne(userDetails)
-        if (!response) {
-            res.status(400).send("User Not found")
+        if (!req.user) {
+            throw new Error("User Not Found")
         }
-        res.send(response)
+        res.send(req.user)
     } catch (error) {
-        console.log("Somthing went wrong")
+        res.status(400).send(`Error while Fetching : ${error.message}`)
     }
-})
-
-//GET all the users 
-app.get("/feed", async (req, res) => {
-
-    try {
-        const response = await UserModel.find({})
-        if (response.length === 0) {
-            res.status(400).send("User Not found")
-        }
-        res.send(response)
-    } catch (error) {
-        console.log("Somthing went wrong")
-    }
-})
-
-//delete  user
-app.delete("/user", async (req, res) => {
-    try {
-        const userId = req.body.userId
-        const deleteResult = await UserModel?.findOneAndDelete({ _id: userId })
-        if (deleteResult.length === 0) {
-            res.status(400).send("User Not found")
-        }
-        res.send(deleteResult)
-    } catch (error) {
-        console.log("Somthing went wrong")
-    }
-
-})
-
-//update  user
-app.patch("/user", async (req, res) => {
-    try {
-        const userId = req.body.userId
-        const updateResult = await UserModel?.findByIdAndUpdate({ _id: userId }, {firstName : "chagapppaa"})
-        console.log(updateResult)
-        if (updateResult.length === 0) {
-            res.status(400).send("User Not found")
-        }
-        console.log(updateResult)
-        res.send(updateResult)
-    } catch (error) {
-        console.log("Somthing went wrong")
-    }
-
-    //thirdParameter is for returning the updated document if right Before it will return the old document before update, if we pass Afrer it will return the updated document
-    // const deleteResult = await UserModel?.findByIdAndUpdate({ _id: userId }, {firstName : "kurubara"}, { returnDocument : "after" })
 })
 
 
