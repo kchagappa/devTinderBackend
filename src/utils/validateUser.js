@@ -14,6 +14,15 @@ const ValidateSignUpUser = async (req) => {
     } catch (error) {
         throw new Error(error.message)
     }
+} 
+
+const validateEditFields = async (req) => {
+    const allowedFields = ["firstName", "lastName", "email", "age", "gender", "skills", "about"]
+    const fieldsToUpdate = Object.keys(req.body)
+    const isValidOperation = fieldsToUpdate.every((field) => allowedFields.includes(field))
+    if (!isValidOperation) {
+        throw new Error("Invalid updates!!!")
+    }
 }
 
-module.exports = ValidateSignUpUser;
+module.exports = { ValidateSignUpUser, validateEditFields }

@@ -21,3 +21,9 @@
     - set the expiry of JWT and cookies to 7 days
     - create schema methods to getJWT
     - create schema method to validatePassword compare 
+    - list the APIs need to build for DevTinder
+    - group the APIs using express Router
+    - read express Router documentation
+    - Read about the pre-handler in the schema. Also, read about indexes and compound indexes—why they are needed and what issues can occur if we use too many unnecessary indexes.
+    - read more about mongoDB query $or, $and, $ne etc.,
+
