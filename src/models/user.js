@@ -81,7 +81,7 @@ UserSchema.methods.validatePassword = async function (passwordUserEnter) {
     const isPasswordMatch = await bcrypt.compare(passwordUserEnter, passworHash)
     return isPasswordMatch
 }
-const UserModel = mongoose.model("users", UserSchema)
+const UserModel = mongoose.model("User", UserSchema)
 
 module.exports = UserModel
 

@@ -9,10 +9,12 @@ const authRouter = require("./routers/auth")
 const profileRouter = require("./routers/profile")
 const requestRouter = require("./routers/request")
 const mongoose = require("mongoose")
+const userRouter = require("./routers/user")
 
 app.use("/",authRouter)
 app.use("/",profileRouter)
 app.use("/",requestRouter)
+app.use("/", userRouter)
 
 
 
@@ -23,7 +25,7 @@ connectDB()
 
             console.log("server running on 8080 portal")
         })
-        mongoose.model('users').syncIndexes(); 
+        mongoose.model('User').syncIndexes(); 
     })
     .catch(error => {
         console.log("Data base is not connected!!!!", error)

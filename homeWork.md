@@ -26,4 +26,5 @@
     - read express Router documentation
     - Read about the pre-handler in the schema. Also, read about indexes and compound indexes—why they are needed and what issues can occur if we use too many unnecessary indexes.
     - read more about mongoDB query $or, $and, $ne etc.,
+    - read about model ref and populate
 
